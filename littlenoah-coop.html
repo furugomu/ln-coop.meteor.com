@@ -1,0 +1,76 @@
+<head>
+  <title>littlenoah-coop</title>
+</head>
+
+<body>
+ <h1><a href=/>Little Noah Coop</a></h1>
+
+</body>
+
+<template name="hello">
+  <button>Click Me</button>
+  <p>You've pressed the button {{counter}} times.</p>
+</template>
+
+<template name="Home">
+ <h2>Areas</h2>
+ {{> areas}}
+</template>
+
+<template name="Area">
+ <h2>{{area_id}} {{area.name}}</h2>
+ {{> stages}}
+ <h2>Messages</h2>
+ {{> messages}}
+</template>
+
+<template name="Stage">
+ <h2><a href="/area/{{area_id}}">{{area_id}} {{area.name}}</a> - {{stage_id}} {{stage.name}}</h2>
+ {{> stages}}
+ {{> form}}
+ <h2>Messages</h2>
+ {{> messages}}
+</template>
+
+<template name="areas">
+ <ul>
+  {{#each areas}}
+  <li><a href="/area/{{area_id}}">{{area_id}} {{name}}</a></li>
+  {{/each}}
+ </ul>
+</template>
+
+<template name="stages">
+ <ul>
+  {{#each area.stages}}
+  <li><a href="/area/{{../area_id}}/{{stage_id}}">{{stage_id}} {{name}}</a></li>
+  {{/each}}
+ </ul>
+</template>
+
+<template name="messages">
+ <ul>
+  {{#each messages}}
+  <li>{{area_id}}-{{stage_id}} {{room_id}}</li>
+  {{/each}}
+ </ul>
+</template>
+
+<template name="form">
+  <form onsubmit="return false">
+   <p>
+    {{area_id}}-{{stage_id}}
+    <input name=area_id type=hidden value="{{area_id}}">
+    <input name=stage_id type=hidden value="{{stage_id}}">
+    <input
+     name=room_id 
+     type=tel 
+     pattern="[0-9]{5}" 
+     size=5 
+     maxlength=5 
+     placeholder=12345 
+     title="five numbers">
+    <button>post</button>
+   </p>
+  </form>
+</template>
