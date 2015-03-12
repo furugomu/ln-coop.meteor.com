@@ -4,9 +4,12 @@
 </head>
 
 <body>
- <h1><a href=/>Little Noah Coop</a></h1>
-
 </body>
+
+<template name="ApplicationLayout">
+ <h1><a href=/>Little Noah Coop</a></h1>
+ {{> yield}}
+</template>
 
 <template name="Home">
  <h2>Areas</h2>
@@ -32,9 +35,8 @@
  </h2>
  {{> stages}}
 
- {{> form}}
-
  <h2>Messages</h2>
+ {{> form}}
  {{> messages}}
 </template>
 
@@ -78,12 +80,12 @@
     <input name=area_id type=hidden value="{{area_id}}">
     <input name=stage_id type=hidden value="{{stage_id}}">
     <input
-     name=room_id 
-     type=tel 
-     pattern="[0-9]{5}" 
-     size=5 
-     maxlength=5 
-     placeholder=12345 
+     name=room_id
+     type=tel
+     pattern="[0-9]{5}"
+     size=5
+     maxlength=5
+     placeholder=12345
      title="five numbers">
     <button>post</button>
    </p>
