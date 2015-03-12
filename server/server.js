@@ -16,6 +16,12 @@ Meteor.publish("messages", function(area_id, stage_id) {
   return Messages.find(conditions);
 });
 
+Messages.allow({
+  insert: function(userId, message) {
+    return true;
+  }
+});
+
 Meteor.startup(function () {
   // code to run on server at startup
   if (Areas.find().count() === 0) {
