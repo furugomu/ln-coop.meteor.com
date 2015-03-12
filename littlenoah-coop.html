@@ -49,11 +49,16 @@
 </template>
 
 <template name="messages">
+ {{#if messages.count}}
  <ul>
+
   {{#each messages}}
   <li>{{area_id}}-{{stage_id}} {{room_id}}</li>
   {{/each}}
  </ul>
+ {{else}}
+ <p>今はありません</p>
+ {{/if}}
 </template>
 
 <template name="form">

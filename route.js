@@ -2,6 +2,9 @@
 
 Router.route('/', {
   name: 'home',
+  subscriptions: function() {
+    this.subscribe('areas');
+  },
   data: function() {
     return {
       areas: Areas.find(),
@@ -12,26 +15,35 @@ Router.route('/', {
 Router.route('/area/:area_id',  {
   name: 'area.show',
   template: 'Area',
+  subscriptions: function() {
+    this.subscribe('areas', this.params.area_id);
+    this.subscribe('messages', this.params.area_id);
+  },
   data: function() {
     var params = this.params;
     return {
       area_id: params.area_id,
-      area: Areas.findOne({area_id: params.area_id|0}),
-      messages: Messages.find({area_id: params.area_id|0}),
+      area: Areas.findOne(),
+      messages: Messages.find(),
     };
   },
 });
 
 Router.route('/area/:area_id/:stage_id', {
   template: 'Stage',
+  subscriptions: function() {
+    this.subscribe('areas', this.params.area_id);
+    this.subscribe('messages', this.params.area_id|0, this.params.stage_id|0);
+  },
   data: function() {
     var params = this.params;
-    var area = Areas.findOne({area_id: params.area_id|0});
+    var area = Areas.findOne();
+    console.log('area', area);
     return {
       area_id: params.area_id,
       stage_id: params.stage_id,
       area: area,
-      messages: Messages.find({area_id: params.area_id|0, stage_id: params.stage_id|0}),
+      messages: Messages.find(),
     };
   },
 });
