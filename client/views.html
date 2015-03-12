@@ -1,5 +1,6 @@
 <head>
-  <title>littlenoah-coop</title>
+ <title>Little Noah Coop</title>
+ <meta name="viewport" content="width=device-width">
 </head>
 
 <body>
@@ -7,27 +8,32 @@
 
 </body>
 
-<template name="hello">
-  <button>Click Me</button>
-  <p>You've pressed the button {{counter}} times.</p>
-</template>
-
 <template name="Home">
  <h2>Areas</h2>
  {{> areas}}
+
+ <h2>Messages</h2>
+ {{> messages}}
 </template>
 
 <template name="Area">
  <h2>{{area_id}} {{area.name}}</h2>
  {{> stages}}
+
  <h2>Messages</h2>
  {{> messages}}
 </template>
 
 <template name="Stage">
- <h2><a href="/area/{{area_id}}">{{area_id}} {{area.name}}</a> - {{stage_id}} {{stage.name}}</h2>
+ <h2>
+  {{area_id}}-{{stage_id}}
+  <a href="/area/{{area_id}}">{{area.name}}</a> 
+  {{stage.name}}
+ </h2>
  {{> stages}}
+
  {{> form}}
+
  <h2>Messages</h2>
  {{> messages}}
 </template>
@@ -53,7 +59,11 @@
  <ul>
 
   {{#each messages}}
-  <li>{{area_id}}-{{stage_id}} {{room_id}}</li>
+  <li>
+   {{area_id}}-{{stage_id}}
+   {{room_id}}
+   <span data-time="{{created_at}}">{{time created_at}}</span>
+  </li>
   {{/each}}
  </ul>
  {{else}}

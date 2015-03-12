@@ -1,1 +1,8 @@
 /* CSS declarations go here */
+
+body {
+  line-height: 1.8;
+}
+input {
+  font-size: 16px;
+}

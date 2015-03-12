@@ -13,3 +13,23 @@ Template.form.events({
     form.reset();
   },
 });
+
+Template.messages.helpers({
+  time: function(t) {
+    return moment(t).fromNow();
+  }
+});
+
+var timer = null;
+Template.messages.rendered = function() {
+  var template = this;
+  timer = Meteor.setInterval(function() {
+    template.findAll('[data-time]').forEach(function(el) {
+      el.textContent = moment(+el.dataset.time).fromNow();
+    });
+  }, 10000);
+}
+
+Template.messages.destroyed = function() {
+  if (timer) Meteor.clearInterval(timer);
+}

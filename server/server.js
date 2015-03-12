@@ -3,17 +3,17 @@
 Meteor.publish("areas", function(area_id) {
   var conditions = {};
   if (area_id) conditions.area_id = area_id|0;
-  return Areas.find(conditions);
+  return Areas.find(conditions, {sort: {area_id: 1}, reactive: false});
 });
 
 Meteor.publish("messages", function(area_id, stage_id) {
   var expires = 30; // minutes
   var conditions = {
-    created_at: {$gt: expires * 60 * 1000},
+    created_at: {$gt: Date.now() - expires * 60 * 1000},
   }
   if (area_id) conditions.area_id = area_id|0;
   if (stage_id) conditions.stage_id = stage_id|0;
-  return Messages.find(conditions);
+  return Messages.find(conditions, {});
 });
 
 Messages.allow({
