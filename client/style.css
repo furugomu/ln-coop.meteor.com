@@ -1,11 +1,5 @@
 /* CSS declarations go here */
 
-body {
-  /*line-height: 1.8;*/
-}
-.input {
-  font-size: 16px;
-}
 .hoge {
   width: 2.5em;
   height: 2.5em;
@@ -25,4 +19,8 @@ body {
 
 .messages {
   max-width: 30rem;
+}
+
+.ui.form .field > input {
+  font-size: 16px !important; /* iOS: prevent zoom */
 }
