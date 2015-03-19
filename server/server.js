@@ -16,7 +16,10 @@ Meteor.publish("messages", function(area_id, stage_id) {
 Messages.allow({
   insert: function(userId, message) {
     return true;
-  }
+  },
+  remove: function(userId, message) {
+    return true;
+  },
 });
 
 // 古いのを消す

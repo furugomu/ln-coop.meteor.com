@@ -14,10 +14,19 @@ Template.form.events({
   },
 });
 
+Template.messages.events({
+  "click .delete": function(event) {
+    console.log('delete', this);
+    var button = event.target;
+    var id = button.getAttribute('data-id');
+    Messages.remove(id);
+  }
+});
+
 Template.messages.helpers({
   time: function(t) {
     return moment(t).fromNow();
-  }
+  },
 });
 
 var timer = null;
