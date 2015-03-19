@@ -8,3 +8,8 @@ meteor-platform
 iron:router
 momentjs:moment
 semantic:ui-css
+meteorhacks:npm
+
+
+npm-container
+http
