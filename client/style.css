@@ -3,11 +3,8 @@
 body {
   /*line-height: 1.8;*/
 }
-input {
+.input {
   font-size: 16px;
-}
-main {
-  margin: 0 5vw;
 }
 .hoge {
   width: 2.5em;
@@ -20,4 +17,12 @@ main {
 }
 .delete {
   cursor: pointer;
+}
+
+.ui.header > a {
+  color: inherit;
+}
+
+.messages {
+  max-width: 30rem;
 }

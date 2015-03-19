@@ -7,41 +7,48 @@
 </body>
 
 <template name="ApplicationLayout">
- <h1 class="ui header"><a href=/>Little Noah Coop</a></h1>
- <main>
- {{> yield}}
- </main>
-</template>
-
-<template name="Home">
- <div class="ui feed">
-  <div class="event">
-   <div class="text label">1-1</div>
-   <div class="content">
-    <div class="summary">12345</div>
-    <div class="date">two years ago</div>
-    <div class="meta">
-     <div class="delete"><i class="remove icon"></i>delete</div>
-    </div>
+ <div class="ui inverted teal segment">
+  <div class="ui page grid">
+   <div class="column">
+    <h1 class="ui inverted header">
+     <a href=/>
+      <i class="asterisk icon"></i>
+      Little Noah Coop
+     </a>
+    </h1>
    </div>
   </div>
  </div>
 
- {{> breadcrumb}}
+ <div class="ui page grid">
+  <main class="column">
+   {{> breadcrumb}}
+   {{> yield}}
+  </main>
+ </div>
+</template>
 
+<template name="Home">
  <div class="ui two column grid">
   <div class=column>
    {{> areas}}
   </div>
  </div>
 
- <h2>Messages</h2>
+ <h2 class="ui teal header">Usage</h2>
+ <div class="ui message">
+  <div class="header">リトル ノアの4人協力 COOP バトルを募集する奴です</div>
+  <ul class="list">
+   <li>リロードしなくても自動で更新されます。</li>
+   <li>上の一覧からエリアとステージを選ぶとルームIDを書き込めます。</li>
+   <li>人がいないとどうしようもないので色々な所で宣伝してください。</li>
+  </ul>
+ </div>
+
  {{> messages}}
 </template>
 
 <template name="Area">
- {{> breadcrumb}}
-
  <div class="ui two column grid">
   <div class=column>
    {{> current_area}}
@@ -51,13 +58,10 @@
   </div>
  </div>
 
- <h2>Messages</h2>
  {{> messages}}
 </template>
 
 <template name="Stage">
- {{> breadcrumb}}
-
  <div class="ui two column grid">
   <div class=column>
    {{> current_area}}
@@ -67,13 +71,14 @@
   </div>
  </div>
 
- <h2>Messages</h2>
  {{> form}}
+
  {{> messages}}
 </template>
 
 <template name="areas">
  <div class="ui vertical pointing fluid menu">
+  <div class="header item">Area</div>
   {{#each areas}}
    <a class="item {{active ../stage_id}}" href="/area/{{area_id}}">{{area_id}} {{name}}</a>
   {{/each}}
@@ -82,6 +87,7 @@
 
 <template name="stages">
  <div class="ui vertical fluid menu">
+  <div class="header item">Stage</div>
   {{#each area.stages}}
    <a class="item {{active ../stage_id}}" href="/area/{{../area_id}}/{{stage_id}}">{{stage_id}} {{name}}</a>
   {{/each}}
@@ -90,70 +96,77 @@
 
 <template name="current_area">
  <div class="ui vertical pointing fluid menu">
+  <div class="header item">Area</div>
   {{#if stage}}
-  <a class="item active blue" href="/area/{{area_id}}">{{area_id}} {{area.name}}</a>
+  <a class="item active teal" href="/area/{{area_id}}">{{area_id}} {{area.name}}</a>
   {{else}}
-  <div class="item active blue">{{area_id}} {{area.name}}</div>
+  <div class="item active teal">{{area_id}} {{area.name}}</div>
   {{/if}}
   <a class="item" href="/">…</a>
  </div>
 </template>
 
 <template name="messages">
- <div class="ui feed">
+ <h2 class="ui teal dividing header">Messages</h2>
+ <div class="ui feed messages">
   {{#if messages.count}}
    {{#each messages}}
     <div class="event">
      <div class="label">
-      <div class=hoge>{{area_id}}-{{stage_id}}</div>
+      <div class=hoge>
+       <a href="/area/{{area_id}}/{{stage_id}}">
+        {{area_id}}-{{stage_id}}
+       </a>
+      </div>
      </div>
      <div class="content">
-      <div class="date">
-       <span data-time="{{created_at}}">{{time created_at}}</span>
-      </div>
-      <div class="summary">
-       {{room_id}}
-      </div>
-      <div class="meta">
-       <button class="ui tiny labeled icon button delete" data-id="{{_id}}">
-        <i class="remove icon"></i>delete
-       </button>
+      <div class="ui two column grid">
+       <div class="column">
+        <div class="summary">
+         {{room_id}}
+        </div>
+        <div class="date">
+         <span data-time="{{created_at}}">{{time created_at}}</span>
+        </div>
+       </div>
+       <div class="column">
+        <button class="ui tiny labeled icon button delete" data-id="{{_id}}">
+         <i class="remove icon"></i>delete
+        </button>
+       </div>
       </div>
      </div>
     </div>
    {{/each}}
   {{else}}
-    <p>今はありません</p>
+    <p>30分以内のメッセージはありません</p>
   {{/if}}
  </div>
 </template>
 
 <template name="form">
-  <form class="ui form">
-   <div class="fields">
-    <div class=field>
-     <label>Stage</label>
-     {{area_id}}-{{stage_id}}
-     <input name=area_id type=hidden value="{{area_id}}">
-     <input name=stage_id type=hidden value="{{stage_id}}">
-    </div>
-    <div class=field>
-     <label>Room</label>
-     <input
-      name=room_id
-      type=tel
-      pattern="[0-9]{5}"
-      size=5
-      maxlength=5
-      placeholder=12345
-      title="five numbers">
-    </div>
-    <div class=field>
-     <label>&nbsp;</label>
-     <button class="ui submit button">post</button>
-    </div>
+ <h2 class="ui teal dividing header">New Message</h2>
+ <form class="ui form">
+  <div class="fields">
+   <input name=area_id type=hidden value="{{area_id}}">
+   <input name=stage_id type=hidden value="{{stage_id}}">
+   <div class="inline field">
+    <label>Room ID</label>
+    <input
+     class=input
+     name=room_id
+     type=tel
+     pattern="[0-9]{5}"
+     size=5
+     maxlength=5
+     placeholder=12345
+     title="five numbers">
    </div>
-  </form>
+   <div>
+    <button class="ui submit button">Post</button>
+   </div>
+  </div>
+ </form>
 </template>
 
 <template name="breadcrumb">
