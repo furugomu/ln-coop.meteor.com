@@ -7,33 +7,65 @@
 </body>
 
 <template name="ApplicationLayout">
- <h1><a href=/>Little Noah Coop</a></h1>
+ <h1 class="ui header"><a href=/>Little Noah Coop</a></h1>
+ <main>
  {{> yield}}
+ </main>
 </template>
 
 <template name="Home">
- <h2>Areas</h2>
- {{> areas}}
+ <div class="ui feed">
+  <div class="event">
+   <div class="text label">1-1</div>
+   <div class="content">
+    <div class="summary">12345</div>
+    <div class="date">two years ago</div>
+    <div class="meta">
+     <div class="delete"><i class="remove icon"></i>delete</div>
+    </div>
+   </div>
+  </div>
+ </div>
+
+ {{> breadcrumb}}
+
+ <div class="ui two column grid">
+  <div class=column>
+   {{> areas}}
+  </div>
+ </div>
 
  <h2>Messages</h2>
  {{> messages}}
 </template>
 
 <template name="Area">
- <h2>{{area_id}} {{area.name}}</h2>
- {{> stages}}
+ {{> breadcrumb}}
+
+ <div class="ui two column grid">
+  <div class=column>
+   {{> current_area}}
+  </div>
+  <div class=column>
+   {{> stages}}
+  </div>
+ </div>
 
  <h2>Messages</h2>
  {{> messages}}
 </template>
 
 <template name="Stage">
- <h2>
-  {{area_id}}-{{stage_id}}
-  <a href="/area/{{area_id}}">{{area.name}}</a> 
-  {{stage.name}}
- </h2>
- {{> stages}}
+ {{> breadcrumb}}
+
+ <div class="ui two column grid">
+  <div class=column>
+   {{> current_area}}
+  </div>
+  <div class=column>
+   {{> stages}}
+  </div>
+ </div>
 
  <h2>Messages</h2>
  {{> form}}
@@ -41,54 +73,103 @@
 </template>
 
 <template name="areas">
- <ul>
+ <div class="ui vertical pointing fluid menu">
   {{#each areas}}
-  <li><a href="/area/{{area_id}}">{{area_id}} {{name}}</a></li>
+   <a class="item {{active ../stage_id}}" href="/area/{{area_id}}">{{area_id}} {{name}}</a>
   {{/each}}
- </ul>
+ </div>
 </template>
 
 <template name="stages">
- <ul>
+ <div class="ui vertical fluid menu">
   {{#each area.stages}}
-  <li><a href="/area/{{../area_id}}/{{stage_id}}">{{stage_id}} {{name}}</a></li>
+   <a class="item {{active ../stage_id}}" href="/area/{{../area_id}}/{{stage_id}}">{{stage_id}} {{name}}</a>
   {{/each}}
- </ul>
+ </div>
+</template>
+
+<template name="current_area">
+ <div class="ui vertical pointing fluid menu">
+  {{#if stage}}
+  <a class="item active blue" href="/area/{{area_id}}">{{area_id}} {{area.name}}</a>
+  {{else}}
+  <div class="item active blue">{{area_id}} {{area.name}}</div>
+  {{/if}}
+  <a class="item" href="/">…</a>
+ </div>
 </template>
 
 <template name="messages">
- {{#if messages.count}}
- <ul>
-
-  {{#each messages}}
-  <li>
-   {{area_id}}-{{stage_id}}
-   {{room_id}}
-   <span data-time="{{created_at}}">{{time created_at}}</span>
-   <button class=delete data-id="{{_id}}">&times;</button>
-  </li>
-  {{/each}}
- </ul>
- {{else}}
- <p>今はありません</p>
- {{/if}}
+ <div class="ui feed">
+  {{#if messages.count}}
+   {{#each messages}}
+    <div class="event">
+     <div class="label">
+      <div class=hoge>{{area_id}}-{{stage_id}}</div>
+     </div>
+     <div class="content">
+      <div class="date">
+       <span data-time="{{created_at}}">{{time created_at}}</span>
+      </div>
+      <div class="summary">
+       {{room_id}}
+      </div>
+      <div class="meta">
+       <button class="ui tiny labeled icon button delete" data-id="{{_id}}">
+        <i class="remove icon"></i>delete
+       </button>
+      </div>
+     </div>
+    </div>
+   {{/each}}
+  {{else}}
+    <p>今はありません</p>
+  {{/if}}
+ </div>
 </template>
 
 <template name="form">
-  <form onsubmit="return false">
-   <p>
-    {{area_id}}-{{stage_id}}
-    <input name=area_id type=hidden value="{{area_id}}">
-    <input name=stage_id type=hidden value="{{stage_id}}">
-    <input
-     name=room_id
-     type=tel
-     pattern="[0-9]{5}"
-     size=5
-     maxlength=5
-     placeholder=12345
-     title="five numbers">
-    <button>post</button>
-   </p>
+  <form class="ui form">
+   <div class="fields">
+    <div class=field>
+     <label>Stage</label>
+     {{area_id}}-{{stage_id}}
+     <input name=area_id type=hidden value="{{area_id}}">
+     <input name=stage_id type=hidden value="{{stage_id}}">
+    </div>
+    <div class=field>
+     <label>Room</label>
+     <input
+      name=room_id
+      type=tel
+      pattern="[0-9]{5}"
+      size=5
+      maxlength=5
+      placeholder=12345
+      title="five numbers">
+    </div>
+    <div class=field>
+     <label>&nbsp;</label>
+     <button class="ui submit button">post</button>
+    </div>
+   </div>
   </form>
+</template>
+
+<template name="breadcrumb">
+ <div class="ui breadcrumb">
+  {{#if area}}
+  <a class="section" href="/">Top</a>
+  <i class="right chevron icon divider"></i>
+  {{#if stage}}
+  <a class="section" href="/area/{{area_id}}">{{area.name}}</a>
+  <i class="right chevron icon divider"></i>
+  <div class="active section">{{stage.name}}</div>
+  {{else}}
+  <div class="active section">{{area.name}}</div>
+  {{/if}}
+  {{else}}
+  <div class="active section">Top</div>
+  {{/if}}
+ </div>
 </template>

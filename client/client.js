@@ -42,3 +42,19 @@ Template.messages.rendered = function() {
 Template.messages.destroyed = function() {
   if (timer) Meteor.clearInterval(timer);
 }
+
+Template.areas.helpers({
+  active: function(areaId) {
+    if (this.area_id == areaId)
+      return "active teal";
+    return "";
+  }
+});
+
+Template.stages.helpers({
+  active: function(stageId) {
+    if (this.stage_id == stageId)
+      return "active teal";
+    return "";
+  }
+});

@@ -1,8 +1,23 @@
 /* CSS declarations go here */
 
 body {
-  line-height: 1.8;
+  /*line-height: 1.8;*/
 }
 input {
   font-size: 16px;
+}
+main {
+  margin: 0 5vw;
+}
+.hoge {
+  width: 2.5em;
+  height: 2.5em;
+  line-height: 2.5em;
+  vertical-align: middle;
+  text-align: center;
+  border-radius: 50%;
+  background: white;
+}
+.delete {
+  cursor: pointer;
 }
