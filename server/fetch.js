@@ -7,6 +7,11 @@ var cheerio = Meteor.npmRequire('cheerio');
 //var url = 'http://wiki.famitsu.com/littlenoah/COOP%E5%8B%9F%E9%9B%86%E6%8E%B2%E7%A4%BA%E6%9D%BF';
 var url = 'http://localhost:10080/coop.html';
 Meteor.setInterval(function() {
+  fetchFamitsuWiki(url);
+}, 10000);
+
+// ファミ通 Wiki のコメントを Messages に入れる
+function fetchFamitsuWiki(url) {
   HTTP.get(url, {}, function(err, result) {
     if (err) {
       console.error(err);
@@ -14,37 +19,47 @@ Meteor.setInterval(function() {
     }
 
     console.info(result.statusCode, result.content.length);
-    var $ = cheerio.load(result.content);
-
-    $('.comment').each(function() {
-      var dateString = $(this).find('.comment-create-date').text();
-      var text = $(this).find('.comment-body').text().trim();
-
-      var date = new Date(); // TODO: JST としてパースる
-
-      var m = /\b(\d)-(\d)\b/.exec(text);
-      if (!m) return;
-      var areaId = m[1]|0;
-      var stageId = m[2]|0;
-
-      m = /\b(\d{5})\b/.exec(text);
-      if (!m) return;
-      var roomId = m[1]|0;
-
-      return;
-      Messages.insert({
-        area_id: areaId,
-        stage_id: stageId,
-        room_id: roomId,
-        created_at: date,
-      });
+    parse(result.content).forEach(function (message) {
+      if (Messages.findOne(message)) return;
+      Messages.insert(message);
     });
   });
-}, 10000);
+}
 
-function parse(err, window) {
-  if (err) {
-    console.error(err);
-    return;
-  }
+// ファミ通 Wiki の中身を見て Messages に入れる物を返す
+function parse(html) {
+  var $ = cheerio.load(html);
+  var messages = [];
+
+  $('.comment').each(function() {
+    var dateString = $(this).find('.comment-create-date').text();
+    var text = $(this).find('.comment-body').text().trim();
+
+    // date
+    var m = /(\d{4})年(\d{2})月(\d{2})日(\d{2})時(\d{2})分/.exec(dateString);
+    if (!m) return;
+    var time = Date.UTC(m[1], m[2]-1, m[3], m[4], m[5]);
+    var jstOffset = 9 * 60 * 60 * 1000;
+    time -= jstOffset;
+
+    // area, stage
+    m = /\b(\d)-(\d)\b/.exec(text);
+    if (!m) return;
+    var areaId = m[1]|0;
+    var stageId = m[2]|0;
+
+    // room
+    m = /\b(\d{5})\b/.exec(text);
+    if (!m) return;
+    var roomId = m[1]|0;
+
+    console.log(areaId, stageId, roomId, new Date(time));
+    messages.push({
+      area_id: areaId,
+      stage_id: stageId,
+      room_id: roomId,
+      created_at: time,
+    });
+  });
+  return messages;
 }
