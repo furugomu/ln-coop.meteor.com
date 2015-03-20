@@ -4,11 +4,19 @@
 
 var cheerio = Meteor.npmRequire('cheerio');
 
-//var url = 'http://wiki.famitsu.com/littlenoah/COOP%E5%8B%9F%E9%9B%86%E6%8E%B2%E7%A4%BA%E6%9D%BF';
-var url = 'http://localhost:10080/coop.html';
+var urls = [
+  'http://wiki.famitsu.com/littlenoah/COOP%E5%8B%9F%E9%9B%86%E6%8E%B2%E7%A4%BA%E6%9D%BF',
+];
+for (var i = 1; i <= 9; ++i) {
+  urls.push('http://wiki.famitsu.com/littlenoah/COOP%E5%8B%9F%E9%9B%86%E6%8E%B2%E7%A4%BA%E6%9D%BF/%E3%82%A8%E3%83%AA%E3%82%A2'+String(i));
+}
+
+var i = 0;
 Meteor.setInterval(function() {
+  var url = urls[i++];
+  if (i >= urls.length) i = 0;
   fetchFamitsuWiki(url);
-}, 10000);
+}, 60*1000);
 
 // ファミ通 Wiki のコメントを Messages に入れる
 function fetchFamitsuWiki(url) {
@@ -18,7 +26,7 @@ function fetchFamitsuWiki(url) {
       return;
     }
 
-    console.info(result.statusCode, result.content.length);
+    console.info(result.statusCode, result.content.length, url);
     parse(result.content).forEach(function (message) {
       if (Messages.findOne(message)) return;
       Messages.insert(message);
